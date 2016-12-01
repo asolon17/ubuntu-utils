@@ -8,9 +8,9 @@ WARNING:
 TO INSTALL:
   To install enter the following commands:
   <code>
-    wget "https://raw.githubusercontent.com/asolon17/ubuntu-utils/master/Setup"<br/>
-    chmod +x Setup <br/>
-    sudo ./Setup <br />
+    wget "https://raw.githubusercontent.com/asolon17/ubuntu-utils/master/Setup"<br>
+    chmod +x Setup <br>
+    sudo ./Setup <br>
   </code>
   
   After that the ubuntu-utils scripts pack will be installed at <i>~/Scripts/ubuntu-utils</i>. The scripts are not installed globally (due to possible conflicts) and must be used from that directory. To update repeat the steps above.
