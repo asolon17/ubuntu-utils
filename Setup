@@ -60,3 +60,4 @@ cd "${HOME}/Scripts/ubuntu-utils"
 
 echo "SetCPUGoverner:"
 wget -O "SetCPUGoverner" "${URLROOT}/SetCPUGoverner" 
+chmod +x "SetCPUGoverner"
