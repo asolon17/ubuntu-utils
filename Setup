@@ -1,0 +1,62 @@
+#!/bin/bash
+# Name:		Setup
+# Author:	Alexander C. Solon
+# Date:		November 30th, 2016
+# Website:	https://github.com/asolon17/ubuntu-utils/
+# About:    Installs the ubuntu-utils script package and its required
+#		dependencies.
+
+URLROOT="https://raw.githubusercontent.com/asolon17/ubuntu-utils/master"
+
+# Usage: getDependencies installdep
+# *installdep - True(0) to install dependencies; False(1) to skip.
+function getDependencies() {
+	echo "Checking dependencies for ubuntu-utils..."
+	if [ $1 -eq 0 ]; then
+		if [[ $EUID -ne 0 ]]; then
+			echo "Error: Must be run as root!"
+			exit 1
+		fi
+		apt-get -q -y update
+	else
+		echo "Warning: Not installing dependencies."
+	fi
+	
+	if hash dialog 2>/dev/null; then
+		echo -e "\tdialog: Installed"
+	else
+		echo -e "\tdialog: Not Installed"
+		if [ $1 -eq 0 ]; then
+			apt-get -q -y install dialog
+		fi
+	fi
+	
+	if hash wget 2>/dev/null; then
+		echo -e "\twget: Installed"
+	else
+		echo -e "\twget: Not Installed"
+		if [ $1 -eq 0 ]; then
+			apt-get -q -y install wget
+		fi
+	fi
+	
+	echo ""
+}
+
+if [ "$1" = "-N" ]; then
+	getDependencies 1 # Skip instalation of dependencies
+else
+	getDependencies 0 # Install dependencies
+fi
+
+echo "Downloading ubuntu-utils @ ~/Scripts/ubuntu-utils/"
+if ! [ -d "${HOME}/Scripts" ]; then
+	mkdir ~/Scripts
+fi
+if ! [ -d "${HOME}/Scripts/ubuntu-utils" ]; then
+	mkdir ~/Scripts/ubuntu-utils
+fi
+cd "${HOME}/Scripts/ubuntu-utils"
+
+echo "SetCPUGoverner:"
+wget -O "SetCPUGoverner" "${URLROOT}/SetCPUGoverner" 
