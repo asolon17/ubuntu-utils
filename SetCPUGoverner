@@ -1,0 +1,56 @@
+#!/bin/bash
+# Name:		SetCPUGoverner
+# Author:	Alexander C. Solon
+# Date:		November 30th, 2016
+# About:	Provides an easier way to change the CpuFreq governer.
+
+# Ensure running as root
+if [[ $EUID -ne 0 ]]; then
+	echo "Error: Must be run as root!"
+	exit 1
+fi
+
+# Setup temporary files
+TMPFILE=/tmp/dialog_1_$$
+
+trap "rm -f $TMPFILE" 0 1 2 5 15
+
+# Get user selection
+dialog --clear \
+		--title "SetCPUGoverner" \
+		--menu "Select your preferred governer:" 15 55 5 \
+			1 "OnDemand" \
+			2 "Performance" 2> $TMPFILE
+RETV=$?
+CHOICE=$(cat $TMPFILE)
+clear
+
+if (( $RETV == 1 || $RETV == 255 )); then
+	echo "Warning: Selection cancelled by user."
+	exit 2
+fi
+
+# Set CpuFreq governer according to selection
+case $CHOICE in
+	1)
+		# Set governer to ondemand
+		cpufreq-set -c 0 -g ondemand
+		cpufreq-set -c 1 -g ondemand
+		if (( $? != 0 )); then
+			echo "Error: There was a problem setting the CpuFreq governer!"
+			exit 1
+		else
+			echo "Info: CpuFreq Governer set to 'ondemand'."
+		fi
+		;;
+	2)
+		# Set governer to performance
+		cpufreq-set -c 0 -g performance
+		cpufreq-set -c 1 -g performance
+		if (( $? != 0 )); then
+			echo "Error: There was a problem setting the CpuFreq governer!"
+		else
+			echo "Info: CpuFreq Governer set to 'performance'."
+		fi
+		;;
+esac
